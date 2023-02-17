@@ -1,20 +1,23 @@
-# Data source
+# 📚 Data
 
-The data of a single K-line must follow the following format:
-```javascript
+The data required for the chart must be in a fixed format. Through the chart API [applyNewData(dataList, more)](/api/instance#applynewdatadatalist-more), [applyMoreData(dataList, more)](/api/instance#applymoredatadatalist-more) and [ updateData(data)](/api/instance#updatedatadata) to interact data with the chart.
+
+```typescript
 {
-  // require
-  open: 111,
-  // require
-  close: 111,
-  // require
-  high: 111,
-  // require
-  low: 111,
-  volume: 12,
-  // If you need to display the technical indicators'EMV' and'AVP', you need to fill in data for this field.
-  turnover: 1234,
-  // require
-  timestamp: 1610188586000
+  // Timestamp, millisecond, required fields
+  timestamp: number,
+  // Open price, required fields
+  open: number,
+  // Close price, required field
+  close: number,
+  // Highest price, required field
+  high: number,
+  // Lowest price, required field
+  low: number,
+  // volume, optional field
+  volume: number,
+  // Turnover, a non-required field, if you need to display the technical indicators 'EMV' and 'AVP', you need to fill this field with data.
+  turnover: number
 }
+```
 ```

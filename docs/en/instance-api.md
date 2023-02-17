@@ -1,524 +1,867 @@
 # Instance API
 
-### getDom(finder)
-Get container dom.
-- `finder` returns the root container by default, `{ paneId, position }`
-  - `pandId` pane id
-  - `position` optional parameters 'root', 'content' and 'yAxis'
+## getDom(paneId, position)
+```typescript
+(paneId?: string, position?: 'root' | 'main' | 'yAxis') => HTMLElement
+```
+Get the dom container.
+- `paneId` window id, the default is the entire chart container
+- `position` options are 'root', 'main' and 'yAxis', default is 'root'
 
 
-### getWidth()
-Get chart width.
+## getSize(paneId, position)
+```typescript
+(paneId?: string, position?: 'root' | 'main' | 'yAxis') => {
+   width: number,
+   height: number,
+   left: number,
+   top: number,
+   right: number,
+   bottom: number
+}
+```
+Get the dimensions.
+- `paneId` window id, the default is the entire chart container
+- `position` position, supports `root`, `main`, `yAxis`, the default is `root`
 
 
-### getHeight()
-Get chart height.
+## setStyles(styles)
+```typescript
+(styles: string | object) => HTMLElement
+```
+Set style configuration.
+- `styles` style configuration, which can be the style name registered through `registerStyles`. When it is an object, please refer to [styles](/guide/style) for details, and it supports merging.
 
 
-### setStyleOptions(options)
-Set the style configuration.
-- `options` style configuration, please refer to [style details](styles.md)
+## getStyles()
+```typescript
+() => object
+```
+Get the style configuration, return the complete type refer to [styles](/guide/style).
 
 
-### getStyleOptions()
-Get the style configuration.
-
-
-### setPriceVolumePrecision(pricePrecision, volumePrecision)
-Set the price and volume precision. Set the price and quantity accuracy, and the technical indicator series is'price' or'volume' will also be affected.
+## setPriceVolumePrecision(pricePrecision, volumePrecision)
+```typescript
+(pricePrecision: number, volumePrecision: number) => void
+```
+Setting the price and volume precision, while the technical indicator series is 'price' or 'volume' will also be affected.
 - `pricePrecision` price precision
 - `volumePrecision` volume precision
 
 
-### setTimezone(timezone)
+## setTimezone(timezone)
+```typescript
+(timezone: string) => void
+```
 Set the time zone.
-- `timezone` Time zone name, such as'Asia/Shanghai', if it is not set, the local time zone will be automatically obtained. Please search for the relevant documents for the name list of the time zone
+- `timezone` time zone name, such as 'Asia/Shanghai', if not set, it will automatically get the local time zone, please refer to [Time Zone List](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List ).
 
 
-### getTimezone()
-Get the chart time zone.
+## getTimezone()
+```typescript
+() => string
+```
+Get the chart time zone name.
 
 
-### setZoomEnabled(enabled)
-Set whether to zoom.
-- `enabled` true or false
+## setZoomEnabled(enabled)
+```typescript
+(enabled: boolean) => void
+```
+Set whether to scale.
 
 
-### isZoomEnabled()
-Can zoom.
+## isZoomEnabled()
+```typescript
+() => boolean
+```
+Whether it can be scaled.
 
 
-### setScrollEnabled(enabled)
-Set whether to drag and scroll.
-- `enabled` true or false
+## setScrollEnabled(enabled)
+```typescript
+(enabled: boolean) => void
+```
+Set whether dragging and scrolling is possible.
 
 
-### isScrollEnabled()
-Whether you can drag and scroll.
+##isScrollEnabled()
+```typescript
+(enabled: boolean) => void
+```
+Whether dragging and scrolling is possible.
 
 
-### setOffsetRightSpace(space)
-Set the gap that can be left on the right side of the chart.
-- `space` Distance size, number type
+## setOffsetRightDistance(distance)
+```typescript
+(distance: number) => void
+```
+Sets the gap that can be left to the right of the chart.
 
 
-### setLeftMinVisibleBarCount(barCount)
-Set the minimum number of candles visible on the left.
-- `barCount` quantity, number type
+## setLeftMinVisibleBarCount(barCount)
+```typescript
+(barCount: number) => void
+```
+Sets the minimum number of visible candles to the left.
 
 
-### setRightMinVisibleBarCount(barCount)
-Set the minimum number of candles visible on the right.
-- `barCount` number, number type
+## setRightMinVisibleBarCount(barCount)
+```typescript
+(barCount: number) => void
+```
+Sets the minimum number of visible candles to the right.
 
 
-### setDataSpace(space)
-Set the space occupied by a piece of chart data, that is, the width of a single candlestick.
-- `space` width, number type
+## setBarSpace(space)
+```typescript
+(space: number) => void
+```
+Sets the width of a single candlestick of the chart.
 
 
-### getDataSpace()
-Get the space occupied by a single piece of data on a chart.
+## getBarSpace()
+```typescript
+() => number
+```
+Gets the width of a single candlestick on the chart.
+
+## getVisibleRange()
+```typescript
+() => { from: number, to: number }
+```
+Get visible range.
 
 
-### getBarSpace()
-Get the space taken up by drawing a piece of data on a chart.
+## applyNewData(dataList, more)
+```typescript
+(
+   dataList: Array<{
+     timestamp: number,
+     open: number,
+     close: number,
+     high: number,
+     low: number,
+     volume?: number,
+     turnover?: number
+   }>,
+   more?: boolean
+) => void
+```
+Add new data, this method will clear the chart data, no need to call the clearData method additionally.
+- `dataList` is an array of K-line data. For details of the data type, please refer to [data](/guide/data)
+- `more` tells the chart whether there is more historical data, can be defaulted, the default is true
 
 
-### applyNewData(dataList, more)
-Add new data, this method will clear the chart data, no need to call the clearData method.
-- `dataList` is a KLineData array. For details of KLineData type, please refer to the data source
-- `more` tells the chart if there are more historical data, it can be defaulted, the default is true
-
-
-### applyMoreData(dataList, more)
+## applyMoreData(dataList, more)
+```typescript
+(
+   dataList: Array<{
+     timestamp: number,
+     open: number,
+     close: number,
+     high: number,
+     low: number,
+     volume?: number,
+     turnover?: number
+   }>,
+   more?: boolean
+) => void
+```
 Add more historical data.
-- `dataList` is a KLineData array, please refer to the data source for details of KLineData type
-- `more` tells the chart if there is more historical data, it can be the default, the default is true
+- `dataList` is an array of K-line data. For details of the data type, please refer to [data](/guide/data)
+- `more` tells the chart whether there is more historical data, can be defaulted, the default is true
 
 
-### updateData(data)
-Update data. Currently, only the current time stamp of the last data will be matched. If it is the same, it will be overwritten, and if it is different, it will be added.
-- `data` Single bar data
+## updateData(data)
+```typescript
+(data: {
+   timestamp: number,
+   open: number,
+   close: number,
+   high: number,
+   low: number,
+   volume?: number,
+   turnover?: number
+}) => void
+```
+Update data. Currently, only the timestamp of the last piece of data will be matched. If it is the same, it will be overwritten, and if it is different, it will be appended.
+- `data` single k-line data, please refer to [data](/guide/data) for details of data type
 
 
-### getDataList()
-Get the current data source of the chart.
+## getDataList()
+```typescript
+() => Array<{
+   timestamp: number,
+   open: number,
+   close: number,
+   high: number,
+   low: number,
+   volume?: number,
+   turnover?: number
+}>
+```
+Get the current data source of the chart. For the returned data type, please refer to [data](/guide/data).
 
 
-### clearData()
-Clear chart data. Normally, clear data is to add new data. In order to avoid repeated drawing, all here is just to clear data, and the chart will not be redrawn.
+## clearData()
+```typescript
+() => void
+```
+Clear the data of the chart. Generally, it is not necessary to call it manually. In order to avoid repeated drawing, the data is only cleared here, and the chart will not be redrawn.
 
 
-### loadMore(cb)
-Set to load more callback functions.
-- `cb` is a callback method, the callback parameter is the timestamp of the first data
+## loadMore(cb)
+```typescript
+(cb: (timestamp: number | null) => void) => void
+```
+Set load more callback function.
+- `cb` is a callback method, `timestamp` is the timestamp of the first piece of data.
 
-
-### createTechnicalIndicator(value, isStack, paneOptions)
-Create a technical indicator, the return value is a string that identifies the window, which is very important, and some subsequent operations on the window require this identification.
-- `value` name or object, when it is an object, the type is the same as the input parameter of `overrideTechnicalIndicator`
-- `isStack` is covered
-- `paneOptions` window configuration information, which can be defaulted, `{ id, height, dragEnabled }`
-  - `id` window id, default. Special paneId: candle_pane, the window id of the main image
-  - `height` The height of the window
-  - `minHeight` The min height of the window
-  - `dragEnbaled` window can be adjusted by dragging
+## createIndicator(value, isStack, paneOptions, callback)
+```typescript
+(
+   value: string | {
+   name: string,
+     shortName?: string,
+     precision?: number,
+     calcParams?: any[],
+     shouldOhlc?: boolean,
+     shouldFormatBigNumber?: boolean,
+     visible?: boolean,
+     extendData?: any,
+     series?: 'normal' | 'price' | 'volume',
+     figures?: Array<{
+       key: string,
+       title?: string,
+       type?: string,
+       baseValue?: number,
+       styles?: (
+         data: object,
+         indicator: object,
+         defaultStyles: object
+       ) => { style?: 'solid' | 'dashed' | 'stroke' | 'fill' | 'stroke_fill', color?: string }
+     }>
+     minValue?: number,
+     maxValue?: number,
+     styles?: object,
+     calc?: (dataList: KLineData[], indicator: object) => Promise<object[]> | object[],
+     regenerateFigures?: (calcParms: any[]) => Array<{
+       key: string,
+       title?: string,
+       type?: string,
+       baseValue?: number,
+       styles?: (
+         data: object,
+         indicator: object,
+         defaultStyles: object
+       ) => { style?: 'solid' | 'dashed' | 'stroke' | 'fill' | 'stroke_fill', color?: string }
+     }>,
+     createTooltipDataSource?: (params: object) => {
+       name?: string,
+       calcParamsText?: string,
+       values?: Array<{
+         title: string | { text: string, color: string },
+         value: string | { text: string, color: string }
+       }>
+     },
+     draw?: (params: object) => boolean
+   },
+   isStack?: boolean,
+   paneOptions?: {
+     id?: string,
+     height?: number,
+     minHeight?: number,
+     dragEnabled?: boolean
+     gap?: {
+       top?: number,
+       bottom?: number
+     }
+   } | null,
+   callback?: () => void
+) => string | null
+```
+Create a technical indicator, the return value is a string that identifies the window, which is very important, and this identification is required for some subsequent operations on the window.
+- `value` technical indicator name or technical indicator object, when it is an object, the type is consistent with the input parameter of the chart method `overrideIndicator`
+- `isStack` is overrides
+- `paneOptions` window configuration information, can be default
+    - `id` window id, can be default
+    - `height` window height, can be default
+    - `minHeight` minimum height of the window, can be defaulted
+    - `dragEnbaled` Whether the window can be dragged to adjust the height, it can be defaulted
+    - `gap` margins
+      - `top` top margin, value less than 1 is a percentage
+      - `bottom` bottom margin, value less than 1 is a percentage
+- `callback` success callback
+<Alert type="info">
+   Special id: 'candle_pane', the window id of the main picture
+</Alert>
 
 Example:
 ```javascript
 chart.createTechnicalIndicator('MA', false, {
-  id:'pane_1',
-  height: 100,
-  minHeihgt: 50
-  dragEnabled: true
-})
+   id: 'pane_1',
+   height: 100,
+   minHeight: 30,
+   dragEnabled: true,
+   gap: { top: 0.2, bottom: 0.1 }
+}, () => {})
 ```
 
-
-### overrideTechnicalIndicator(override, paneId)
-Cover technical indicator information.
-- `override` some parameters that need to be overridden, `{ name, calcParams, calcParamsAllowDecimal, precision, styles }`
-  - `name` technical indicator name, required field
-  - `calcParams` calculation parameters, it can be defaulted
-  - `shouldOhlc` Whether ohlc auxiliary line is needed, it can be defaulted
-  - `shouldFormatBigNimber` Whether you need to format large numbers, it can be defaulted
-  - `precision` precision, default
-  - `styles` style, it can be defaulted, and the `technicalIndicator` in the same style configuration is consistent
-- `paneId` pane id, all are set by default
+## overrideIndicator(override, paneId, callback)
+```typescript
+(
+   override: {
+     name: string,
+     shortName?: string,
+     precision?: number,
+     calcParams?: any[],
+     shouldOhlc?: boolean,
+     shouldFormatBigNumber?: boolean,
+     visible?: boolean,
+     extendData?: any,
+     series?: 'normal' | 'price' | 'volume',
+     figures?: Array<{
+       key: string,
+       title?: string,
+       type?: string,
+       baseValue?: number,
+       styles?: (
+         data: object,
+         indicator: object,
+         defaultStyles: object
+       ) => { style?: 'solid' | 'dashed' | 'stroke' | 'fill' | 'stroke_fill', color?: string }
+     }>
+     minValue?: number,
+     maxValue?: number,
+     styles?: object,
+     calc?: (dataList: KLineData[], indicator: object) => Promise<object[]> | object[],
+     regenerateFigures?: (calcParms: any[]) => Array<{
+       key: string,
+       title?: string,
+       type?: string,
+       baseValue?: number,
+       styles?: (
+         data: object,
+         indicator: object,
+         defaultStyles: object
+       ) => { style?: 'solid' | 'dashed' | 'stroke' | 'fill' | 'stroke_fill', color?: string }
+     }>,
+     createTooltipDataSource?: (params: object) => {
+       name?: string,
+       calcParamsText?: string,
+       values?: Array<{
+         title: string | { text: string, color: string },
+         value: string | { text: string, color: string }
+       }>
+     },
+     draw?: (params: object) => boolean
+   },
+   paneId?: string | null,
+   callback?: () => void
+) => void
+```
+Overlay technical indicator information.
+- `override` some parameters that need to be overridden
+   - `name` metric name, unique identifier for creation and operation
+   - `shortName` short name for display
+   - `precision` precision
+   - `calcParams` calculation parameters
+   - `shouldOhlc` needs ohlc auxiliary graphics
+   - `shouldFormatBigNumber` should format large numbers. For example, 1000 is converted to 1k, 1000000 is converted to 1M, etc.
+   - `visible` visible or not
+   - `extendData` extended data
+   - `series` indicator series, optional options are 'normal', 'price' and 'volume'
+   - `figures` graphics configuration
+   - `minValue` specifies the minimum value
+   - `maxValue` specifies the maximum value
+   - `styles` styles
+   - `calc` calculation method
+   - `regenerateFigures` method to regenerate figure information
+   - `createTooltipDataSource` method to create custom tip information
+   - `draw` custom drawing method
+- `paneId` window id, default is set to all
+- `callback` success callback
+<Alert type="info">
+   Special paneId: 'candle_pane', the window id of the main image
+</Alert>
 
 Example:
 ```javascript
-chart.overrideTechnicalIndicator({
-  name:'BOLL',
-  calcParams: [20, { value: 5.5, allowDecimal: true }],
-  precision: 4,
-  shouldOhlc: true,
-  shouldFormatBigNimber: false,
-  styles: {
-    margin: {
-      top: 0.2,
-      bottom: 0.1
-    },
-    bar: {
-      upColor:'#26A69A',
-      downColor:'#EF5350',
-      noChangeColor:'#888888'
-    },
-    line: {
-      size: 1,
-      colors: ['#FF9600','#9D65C9','#2196F3','#E11D74','#01C5C4']
-    },
-    circle: {
-      upColor:'#26A69A',
-      downColor:'#EF5350',
-      noChangeColor:'#888888'
-    }
-  }
-}, 'candle_pane')
+chart.overrideIndicator({
+   name: 'BOLL',
+   showName: 'BOLL'
+   calcParams: [20, 5.5],
+   precision: 4,
+   shouldOhlc: true,
+   shouldFormatBigNumber: false,
+   visible: true,
+   extendData: 2432435,
+   series: 'price',
+   figures: [],
+   minValue: null,
+   maxValue: null,
+   calc: () => [],
+   regenerateFigures: () => [],
+   draw: () => {},
+   styles: {
+   bars: [{
+       style: 'fill,
+       borderStyle: 'solid,
+       borderSize: 1,
+       borderDashedValue: [2, 2],
+       upColor: '#26A69A',
+       downColor: '#EF5350',
+       noChangeColor: '#888888'
+     }],
+     lines: [{
+       size: 1,
+       style: 'solid',
+       dashedValue: [2, 2],
+       color: '#FF9600'
+     }],
+     circles: [{
+       style: 'fill,
+       borderStyle: 'solid,
+       borderSize: 1,
+       borderDashedValue: [2, 2],
+       upColor: '#26A69A',
+       downColor: '#EF5350',
+       noChangeColor: '#888888'
+     }]
+   }
+}, 'candle_pane', () => {})
 ```
 
-
-### getTechnicalIndicatorTemplate(name)
-Obtain technical indicator information according to the technical indicator name.
-- `name` technical indicator name, can be the default, the default returns all
-
-
-### getTechnicalIndicatorByPaneId(paneId, name)
+## getIndicatorByPaneId(paneId, name)
+```typescript
+(paneId?: string, name?: string) => object
+```
 Obtain technical indicator information according to the window id.
-- `paneId` window id, which can be defaulted, and all are returned by default.
+- `paneId` window id, that is, the window ID returned when calling the `createIndicator` method, can be defaulted, and all will be returned by default.
 - `name` technical indicator name
+<Alert type="info">
+   Special paneId: 'candle_pane', the window id of the main image
+</Alert>
 
-Special paneId: candle_pane, the window id of the main image
 
-
-### removeTechnicalIndicator(paneId, name)
+## removeIndicator(paneId, name)
+```typescript
+(paneId: string, name?: string) => object
+```
 Remove technical indicators.
-- `paneId` pane id, which is the pane id returned when the createTechnicalIndicator method is called
-Special paneId: candle_pane, the window id of the main image
-- `name` technical indicator type, if default, all will be removed
+- `paneId` window id, that is, the window ID returned when calling the `createIndicator` method
+- `name` technical indicator name, if default, will remove all
+<Alert type="info">
+   Special paneId: 'candle_pane', the window id of the main image
+</Alert>
 
-
-### addTechnicalIndicatorTemplate(template)
-Add a technical indicator template. Can be created in batches, just pass in the array in batches.
-- `template` technical indicator template, please refer to [Technical Indicators](technical-indicator.md)
-
-
-### createShape(value, paneId)
-Create a shape and return a string type identifier
-- `value` name or object, when is object, `{ name, id, points, styles, lock, data, onDrawStart, onDrawing, onDrawEnd, onClick, onRightClick, onPressedMove, onRemove }`
-  - `name` shape name
-  - `id` can be defaulted, if specified, the id will be returned
-  - `points` point information, can be defaulted, if specified, a graph will be drawn according to the point information
-  - `styles` style, can be defaulted, the format is the same as `shape` in the configuration
-  - `lock` is lock
-  - `mode` mode type, 'normal' | 'weak_magnet' | 'strong_magnet'
-  - `data` data
-  - `onDrawStart` draw start callback event, can be default
-  - `onDrawing` callback event during drawing, can be default
-  - `onDrawEnd` draw end callback event, can be default
-  - `onClick` click callback event, default
-  - `onRightClick` right-click callback event, it can be defaulted, it needs to return a boolean type value, if it returns true, the built-in right-click delete will be invalid
-  - `onMouseEnter` mouse enter event, default
-  - `onMouseLeave` mouse leave event, default
-  - `onPressedMove` press and drag callback event
-  - `onRemove` delete callback event
-- `paneId` pane id
-
-Example:
-```javascript
-chart.createShape({
-  name: 'segment',
-  points: [
-    {timestamp: 1614171282000, value: 18987 },
-    {timestamp: 1614171202000, value: 16098 },
-  ],
-  styles: {
-    line: {
-      color:'#f00',
-      size: 2
-    }
-  },
-  lock: true,
-  mode: 'weak_magnet',
-  onDrawStart: function ({ id }) {console.log(id) },
-  onDrawing: function ({ id, step, points }) {console.log(id, step, points) },
-  onDrawEnd: function ({ id }) {console.log(id) },
-  onClick: function ({ id, event }) {console.log(id, event) },
-  onRightClick: function ({ id, event }) {
-    console.log(id, event)
-    return false
-  },
-  onMouseEnter: function ({ id, event }) { console.log(id, event) },
-  onMouseLeave: function ({ id, event }) { console.log(id, event) },
-  onPressedMove: function ({ id, event }) {console.log(id, event) },
-  onRemove: function ({ id }) {console.log(id)}
-}, 'candle_pane')
+## createOverlay(value, paneId)
+```typescript
+(
+   value: string | {
+     name: string,
+     id?: string,
+     groupId?: string,
+     lock?: boolean,
+     visible?: boolean,
+     needDefaultPointFigure?: boolean,
+     needDefaultXAxisFigure?: boolean,
+     needDefaultYAxisFigure?: boolean,
+     mode?: 'normal' | 'weak_magnet' | 'strong_magnet',
+     points?: Array<{ timestamp?: number, dataIndex?: number, value?: number }>,
+     extendData?: any,
+     styles?: object,
+     onDrawStart?: (event: object) => boolean,
+     onDrawing?: (event: object) => boolean,
+     onDrawEnd?: (event: object) => boolean,
+     onClick?: (event: object) => boolean,
+     onRightClick?: (event: object) => boolean,
+     onPressedMoveStart?: (event: object) => boolean,
+     onPressedMoving?: (event: object) => boolean,
+     onPressedMoveEnd?: (event: object) => boolean,
+     onMouseEnter?: (event: object) => boolean,
+     onMouseLeave?: (event: object) => boolean,
+     onRemoved?: (event: object) => boolean,
+     onSelected?: (event: object) => boolean,
+     onDeselected?: (event: object) => boolean
+   },
+   paneId?: string
+) => string | null
 ```
+Creates an overlay, returning an identifier of type String.
+- `value` Overlay name or object, when it is an object, the parameters are consistent with `overrideOverlay`
+- `paneId` window id, can be default
+<Alert type="info">
+   Special paneId: 'candle_pane', the window id of the main image
+</Alert>
 
-
-### getShape(shapeId)
-Get shape information.
-- `paneId` pane id
-- `shapeId` calls the createShape method to return the identity, by default it returns all
-
-
-### setShapeOptions(options)
-Set the drawn shape configuration.
-- `options` configuration, `{ id, points, styles, lock, mode, data }`
-  - `id` calls the createShape method to return the identity, by default it set all
-  - `points` point
-  - `styles` style, the format is the same in the configuration of `shape`
-  - `lock` is lock
-  - `mode` mode type, 'normal' | 'weak_magnet' | 'strong_magnet'
-  - `data` data
-
-
-### addShapeTemplate(template)
-Add a shape template. Can be created in batches, just pass in the array in batches.
-- `template` shape information, please refer to [details](shape.md)
-
-
-### removeShape(shapeId)
-Remove shape.
-- `shapeId` call the createShape method is the returned mark, if the default is, all marks will be removed
-
-
-### createAnnotation(annotation, paneId)
-Create annotation. Can be created in batches, just pass in the array in batches.
-- `annotation` annotation information, `{ point, styles, checkEventCoordinateOnCustomSymbol, drawCustomSymbol, drawExtend, onClick, onRightClick onMouseEnter, onMouseLeave }`
-  - `point` point `{ timestamp, value }`
-  - `styles` style, the format is the same in the configuration of `annotation`
-  - `checkEventCoordinateOnCustomSymbol` Triggered when the style `annotation.symbol.type` is `custom`
-  - `drawCustomSymbol` Triggered when the style `annotation.symbol.type` is `custom`
-  - `drawExtend` Extend drawing method
-  - `onClick` click callback event, default
-  - `onRightClick` right-click callback event, default
-  - `onMouseEnter` mouse enter event, default
-  - `onMouseLeave` mouse leave event, default
-- `paneId` pane id
 Example:
 ```javascript
-chart.createAnnotation({
-  point: { timestamp: 1614171282000, value: 18987 },
-  styles: {
-    offset: [0, 20]
-    position: 'top',
-    symbol: {
-      type: 'diamond',
-      size: 8,
-      color: '#2196F3',
-      activeSize: 10,
-      activeColor: '#FF9600',
-    }
-  },
-  checkEventCoordinateOnCustomSymbol: function ({ eventCoordinate, coordinate, size }) {
-    console.log(eventCoordinate, coordinate, size)
-    return true
-  },
-  drawCustomSymbol: function ({ ctx, point, coordinate, viewport, isActive, styles }) {
-    console.log(point, coordinate, viewport, isActive, styles)
-  },
-  drawExtend: function ({ ctx, point, coordinate, viewport, isActive, styles }) {
-    console.log(point, coordinate, viewport, isActive, styles)
-  },
-  onClick: function ({ id, event }) { console.log(id, event) },
-  onRightClick: function ({ id, event }) { console.log(id, event) },
-  onMouseEnter: function ({ id, event }) { console.log(id, event) },
-  onMouseLeave: function ({ id, event }) { console.log(id, event) },
+chart.createOverlay({
+   name: 'segment',
+   id: 'segment_1',
+   groupId: 'segment',
+   points: [
+     { timestamp: 1614171282000, value: 18987 },
+     { timestamp: 1614171202000, value: 16098 },
+   ],
+   styles: {
+     line: {
+       style: 'solid',
+       dashedValue: [2, 2]
+       color: '#f00',
+       size: 2
+     }
+   },
+   lock: false,
+   visible: true,
+   mode: 'weak_magnet',
+   extendData: 'xxxxxxxx',
+   needDefaultPointFigure: false,
+   needDefaultXAxisFigure: false,
+   needDefaultYAxisFigure: false,
+   onDrawStart: function (event) { console. log(event) },
+   onDrawing: function (event) { console. log(event) },
+   onDrawEnd: function (event) { console. log(event) },
+   onClick: function (event) { console. log(event) },
+   onRightClick: function (event) {
+     console. log(event)
+     return false
+   },
+   onMouseEnter: function (event) { console. log(event) },
+   onMouseLeave: function (event) { console. log(event) },
+   onPressedMoveStart: function (event) { console. log(event) },
+   onPressedMoving: function (event) { console. log(event) },
+   onPressedMoveEnd: function (event) { console. log(event) },
+   onRemoved: function (event) { console. log(event) },
+   onSelected: function (event) { console. log(event) },
+   onDeselected: function (event) { console. log(event) }
 })
 ```
 
+## getOverlayById(id)
+```typescript
+(id: string) => object
+```
+Get overlay information by id.
+- `id` calls the `createOverlay` method to return the ID
 
-### removeAnnotation(paneId, points)
-Remove annotation. Can be removed in batches, just pass in the array in batches, if default, remove all.
-- `paneId` pane id, Remove all by default
-- `points` single point or collection, `{ timestamp }`
 
-
-### createTag(tag, paneId)
-Create tags, you can create them in batches, just pass in an array in batches.
-- `tag` tag，`{ id, point, text, mark, styles }`
-  - `id` unique identifier, if there are duplicates, it will be overwritten
-  - `point` point, default
-  - `text` text, default
-  - `mark` mark, default
-  - `styles` style, default, the format is the same as the `tag` in the configuration
-- `paneId` pane id
-Example:
-```javascript
-chart.createTag({
-  id: 'bid_price',
-  point: { value: 16908 },
-  text: '16908.00',
-  mark: 'bid',
-  styles: {
-    position: 'point',
-    offset: 0,
-    line: {
-      show: true,
-      style: LineStyle.DASH,
-      dashValue: [4, 2],
-      size: 1,
-      color: '#2196F3'
-    },
-    text: {
-      color: '#FFFFFF',
-      backgroundColor: '#2196F3',
-      size: 12,
-      family: 'Helvetica Neue',
-      weight: 'normal',
-      paddingLeft: 2,
-      paddingRight: 2,
-      paddingTop: 2,
-      paddingBottom: 2,
-      borderRadius: 2
-    },
-    mark: {
-      color: '#FFFFFF',
-      backgroundColor: '#2196F3',
-      size: 12,
-      family: 'Helvetica Neue',
-      weight: 'normal',
-      paddingLeft: 2,
-      paddingRight: 2,
-      paddingTop: 2,
-      paddingBottom: 2,
-      borderRadius: 2
-    }
+## overrideOverlay(override)
+```typescript
+(
+  override: {
+    name: string,
+    id?: string,
+    groupId?: string,
+    lock?: boolean,
+    visible?: boolean,
+    needDefaultPointFigure?: boolean,
+    needDefaultXAxisFigure?: boolean,
+    needDefaultYAxisFigure?: boolean,
+    mode?: 'normal' | 'weak_magnet' | 'strong_magnet',
+    points?: Array<{ timestamp?: number, dataIndex?: number, value?: number }>,
+    extendData?: any,
+    styles?: object,
+    onDrawStart?: (event: object) => boolean,
+    onDrawing?: (event: object) => boolean,
+    onDrawEnd?: (event: object) => boolean,
+    onClick?: (event: object) => boolean,
+    onRightClick?: (event: object) => boolean,
+    onPressedMoveStart?: (event: object) => boolean,
+    onPressedMoving?: (event: object) => boolean,
+    onPressedMoveEnd?: (event: object) => boolean,
+    onMouseEnter?: (event: object) => boolean,
+    onMouseLeave?: (event: object) => boolean,
+    onRemoved?: (event: object) => boolean,
+    onSelected?: (event: object) => boolean,
+    onDeselected?: (event: object) => boolean
   }
+) => string | null
+```
+Overlays that have been drawn.
+- `override` parameters that need to be overridden
+   - `name` overlay name, unique identifier for creation
+   - `id` Overlay identification, if the id exists, it will be based on the id to overwrite
+   - `groupId` Group id
+   - `lock` is locked to prevent dragging
+   - `visible` visible or not
+   - `needDefaultPointFigure` needs a default point figure
+   - `needDefaultXAxisFigure` needs the default x-axis figure
+   - `needDefaultYAxisFigure` needs the default y-axis figure
+   - `mode` mode, options are 'normal', 'weak_magnet' and 'strong_magnet'
+   - `points` point information
+   - `extendData` extended data
+   - `styles` styles
+   - `onDrawStart` start drawing event
+   - `onDrawing` drawing event
+   - `onDrawEnd` draw end event
+   - `onClick` click event
+   - `onRightClick` right click event
+   - `onPressedMoveStart` press start move event
+   - `onPressedMoving` Press and move event
+   - `onPressedMoveEnd` Press and move end event
+   - `onMouseEnter` mouse enter event
+   - `onMouseLeave` mouse out event
+   - `onRemoved` delete event
+   - `onSelected` selected event
+   - `onDeselected` deselected event
+
+Example:
+```javascript
+chart.overrideOverlay({
+   name: 'segment',
+   id: 'segment_1',
+   groupId: 'segment',
+   points: [
+     { timestamp: 1614171282000, value: 18987 },
+     { timestamp: 1614171202000, value: 16098 },
+   ],
+   styles: {
+     line: {
+       style: 'solid',
+       dashedValue: [2, 2]
+       color: '#f00',
+       size: 2
+     }
+   },
+   lock: false,
+   visible: true,
+   mode: 'weak_magnet',
+   extendData: 'xxxxxxxx',
+   needDefaultPointFigure: false,
+   needDefaultXAxisFigure: false,
+   needDefaultYAxisFigure: false,
+   onDrawStart: function (event) { console. log(event) },
+   onDrawing: function (event) { console. log(event) },
+   onDrawEnd: function (event) { console. log(event) },
+   onClick: function (event) { console. log(event) },
+   onRightClick: function (event) {
+     console. log(event)
+     return false
+   },
+   onMouseEnter: function (event) { console. log(event) },
+   onMouseLeave: function (event) { console. log(event) },
+   onPressedMoveStart: function (event) { console. log(event) },
+   onPressedMoving: function (event) { console. log(event) },
+   onPressedMoveEnd: function (event) { console. log(event) },
+   onRemoved: function (event) { console. log(event) },
+   onSelected: function (event) { console. log(event) },
+   onDeselected: function (event) { console. log(event) }
 })
 ```
 
-
-### removeTag(paneId, tagId)
-Remove tags, you can remove them in batches, just pass in the array in batches, if default, remove all.
-- `paneId` pane id, Remove all by default
-- `tagId` Unique identification of the tag
-
-
-### removeTag(paneId, tagId)
-To remove tags, you can remove them in batches. You can pass in an array in batches. If the default is used, all of them will be removed.
-- `paneId` pane id, default removes all
-- `tagId` The unique identifier of the tag, by default removes all tags on the pane
-
-
-### createHtml(html, paneId)
-Create an html element that returns an id.
-- `html` element `{ id, position, content, style }`
-  - `id` id
-  - `position` position, type is `yAxis` and `content`, default is `content`
-  - `style` html element container style, inline css style
-  - `content` content, which can be a dom element or a string composed of dom elements
-- `paneId` window id, default is 'candle_pane'
-Example:
-```javascript
-chart.createHtml({
-  id: 'html_1',
-  position: 'content',
-  style: { zIndex: 12 },
-  content: '<div>8888888</div>'
-}, 'candle_pane')
+## removeOverlay(remove)
+```typescript
+(
+  remove: string | {
+    id?: string,
+    groupId?: string,
+    name?: string
+  }
+) => void
 ```
-
-### removeHtml(paneId, htmlId)
-Remove an html element.
-- `paneId` pane id, by default delete all
-- `htmlId` element id, which can be a single id or an array of ids. By default, all items on the corresponding pane are deleted.
-
-
-### scrollByDistance(distance, animationDuration)
-Roll a certain distance.
--`distance` distance
--`animationDuration` animation time, can be default
+Remove graphics.
+- `id` The ID returned by calling the `createOverlay` method.
+- `groupId` Group id
+- `name` Overlay name
 
 
-### scrollToRealTime(animationDuration)
-Scroll to the original position.
--`animationDuration` animation time, can be default
+## scrollByDistance(distance, animationDuration)
+```typescript
+(distance: number, animationDuration?: number) => void
+```
+Scroll a certain distance.
+- `distance` distance
+- `animationDuration` animation time, can be default, default is no animation
 
 
-### scrollToDataIndex(dataIndex, animationDuration)
-Scroll to data index.
--`dataIndex` the index of the data
--`animationDuration` animation time, can be default
-
-### scrollToTimestamp(timestamp, animationDuration)
-Scroll to timestamp.
--`timestamp` timestamp
--`animationDuration` animation time, can be default
+## scrollToRealTime(animationDuration)
+```typescript
+(distance: number, animationDuration?: number) => void
+```
+Scroll to original position.
+- `animationDuration` animation time, can be default, default is no animation
 
 
-### zoomAtCoordinate(scale, coordinate, animationDuration)
-Zoom at coordinate.
--`scale` scaling ratio
--`coordinate` coordinate point, `{ x }` can be defaulted, the default is to zoom in the middle of the chart
--`animationDuration` animation time, can be defaulted, the default is no animation
+## scrollToDataIndex(dataIndex, animationDuration)
+```typescript
+(dataIndex: number, animationDuration?: number) => void
+```
+Scroll to the specified location.
+- `dataIndex` the index of the data
+- `animationDuration` animation time, can be default, default is no animation
+
+## scrollToTimestamp(timestamp, animationDuration)
+```typescript
+(timestamp: number, animationDuration?: number) => void
+```
+Scroll to the specified timestamp.
+- `timestamp` timestamp
+- `animationDuration` animation time, can be default, default is no animation
 
 
-### zoomAtDataIndex(scale, dataIndex, animationDuration)
-Zoom at data index.
--`scale` scaling ratio
--`dataIndex` the index of the data
--`animationDuration` animation time, can be defaulted, the default is no animation
+## zoomAtCoordinate(scale, coordinate, animationDuration)
+```typescript
+(scale: number, coordinate?: { x: number, y: number }, animationDuration?: number) => void
+```
+Scale at a certain coordinate point.
+- `scale` scaling factor
+- `coordinate` coordinate point, can be defaulted, the default is to zoom in the middle of the chart
+- `animationDuration` animation time, can be default, default is no animation
 
 
-### zoomAtTimestamp(scale, timestamp, animationDuration)
-Zoom at timestamp.
--`scale` scaling ratio
--`timestamp` timestamp
--`animationDuration` animation time, can be defaulted, the default is no animation
+## zoomAtDataIndex(scale, dataIndex, animationDuration)
+```typescript
+(scale: number, dataIndex: number, animationDuration?: number) => void
+```
+Scale at a certain position.
+- `scale` scaling factor
+- `dataIndex` the index of the data
+- `animationDuration` animation time, can be default, default is no animation
 
 
-### setPaneOptions(options)
-Set pane options.
-- `options` pane options `{ id, height, dragEnabled }`
-  - `id` pane id
-  - `height` The height of the window
-  - `minHeight` The min height of the window
-  - `dragEnbaled` window can be adjusted by dragging
+## zoomAtTimestamp(scale, timestamp, animationDuration)
+```typescript
+(scale: number, timestamp: number, animationDuration?: number) => void
+```
+Scale on the specified timestamp.
+- `scale` scaling factor
+- `timestamp` timestamp
+- `animationDuration` animation time, can be default, default is no animation
+
+
+## setPaneOptions(options)
+```typescript
+(options: {
+   id: string,
+   height?: number,
+   minHeight?: number,
+   dragEnabled?: boolean
+   gap?: {
+     top?: number,
+     bottom?: number
+   }
+}) => void
+```
+Set window configuration.
+- `paneOptions` window configuration information, can be default
+    - `id` window id
+    - `height` window height, can be default
+    - `minHeight` minimum height of the window, can be defaulted
+    - `dragEnbaled` Whether the window can be dragged to adjust the height, it can be defaulted
+    - `gap` margins
+      - `top` top margin, value less than 1 is a percentage
+      - `bottom` bottom margin, value less than 1 is a percentage
+<Alert type="info">
+   Special id: 'candle_pane', the window id of the main picture
+</Alert>
+
 Example:
 ```javascript
 chart.setPaneOptions({
-  id: 'pane_1',
-  height: 100,
-  minHeight: 50,
-  dragEnabled: true
+   id: 'pane_1',
+   height: 100,
+   minHeight: 3,
+   dragEnabled: true,
+   gap: { top: 0.2, bottom: 0.1 }
 })
 ```
 
 
-### subscribeAction(type, callback)
+## subscribeAction(type, callback)
+```typescript
+(
+   type: 'onZoom' | 'onScroll' | 'onVisibleRangeChange' | 'onCrosshairChange' | 'onTooltipIconClick' | 'onPaneDrag',
+   callback: (data?: any) => void
+) => void
+```
 Subscribe to chart actions.
-- `type` The type is 'zoom', 'scroll', 'crosshair', 'tooltip' and 'pane_drag'
+- `type` options are 'onZoom', 'onScroll', 'onVisibleRangeChange', 'onTooltipIconClick', 'onCrosshairChange' and 'onPaneDrag'
 - `callback` is a callback method
 
 
-### unsubscribeAction(type, callback)
+## unsubscribeAction(type, callback)
+```typescript
+(
+   type: 'onZoom' | 'onScroll' | 'onVisibleRangeChange' | 'onCrosshairChange' | 'onTooltipIconClick' | 'onPaneDrag',
+   callback?: (data?: any) => void
+) => void
+```
 Unsubscribe from chart actions.
-- `type` type is 'zoom', 'scroll', 'crosshair', 'tooltip' and 'pane_drag'
-- `callback` callback method when subscribing
+- `type` options are 'onZoom', 'onScroll', 'onVisibleRangeChange', 'onTooltipIconClick', 'onCrosshairChange' and 'onPaneDrag'
+- `callback` is the callback method when subscribing, the default is to cancel all the current types
 
 
-### convertToPixel(value, finder)
-Convert value to coordinate value.
-- `value` value, `{ timestamp, dataIndex, value }`
-- `finder` finder value, `{ paneId, absoluteYAxis }`
+## convertToPixel(value, finder)
+```typescript
+(
+   value: {
+     dataIndex?: number,
+     timestamp?: number,
+     value?: number
+   } | Array<{
+     dataIndex?: number,
+     timestamp?: number,
+     value?: number
+   }>,
+   finder: {
+     paneId?: string,
+     absolute?: boolean
+   }
+) => { x: number?, y?: number } | Array<{ x?: number, y?: number }>
+```
+Convert values to coordinates.
+- `value` The value to be converted, it can be an object or an array
+   - `dataIndex` data index, if `dataIndex` and `timestamp` exist at the same time, it will be converted according to the index
+   - `timestamp` timestamp
+   - `value` corresponds to the value of the y-axis
+- `finder` filter
+   - `paneId` window id
+   - `absolute` is an absolute coordinate, only works on the y axis
 
 
-### convertFromPixel(coordinate, finder)
-Convert coordinate value to value.
-- `coordinate` coordinate, `{ x, y }`
-- `finder` finder value, `{ timestamp, dataIndex, value }`
+## convertFromPixel(coordinate, finder)
+```typescript
+(
+   coordinate: { x: number?, y?: number } | Array<{ x?: number, y?: number },
+   finder: {
+     paneId?: string,
+     absolute?: boolean
+   }
+) => {
+     dataIndex?: number,
+     timestamp?: number,
+     value?: number
+   } | Array<{
+     dataIndex?: number,
+     timestamp?: number,
+     value?: number
+   }>
+```
+Convert coordinates to values.
+- `coordinate` needs to be converted, it can be an object or an array
+- `finder` filter
+   - `paneId` window id
+   - `absolute` is an absolute coordinate, only works on the y axis
 
 
-### getConvertPictureUrl(includeOverlay, type, backgroundColor)
-Get the picture url after the chart is converted into a picture.
-- `includeOverlay` Whether to include overlay, it can be defaulted
-- `type` The converted picture type. The type is one of three types: 'png', 'jpeg', and 'bmp', which can be defaulted, and the default is 'jpeg'
-- `backgroundColor` background color, can be the default, the default is '#FFFFFF'
+## getConvertPictureUrl(includeOverlay, type, backgroundColor)
+```typescript
+(includeOverlay?: boolean, type?: string, backgroundColor?: string) => string
+```
+Get the image url after the chart is converted into an image.
+- `includeOverlay` needs to include the overlay layer, it can be defaulted
+- `type` The converted image type, one of the three types of 'png', 'jpeg', 'bmp', can be defaulted, the default is 'jpeg'
+- `backgroundColor` background color, can be defaulted, the default is '#FFFFFF'
 
 
-### resize()
+## resize()
+```typescript
+() => void
+```
 Resizing the chart will always fill the container size.
-Note: This method will recalculate the size of each module of the entire chart. Frequent calls may affect performance. Please be cautious when calling
+<Alert type="warning">
+   Note: This method will recalculate the size of each module in the entire chart, frequent calls may affect performance, please call with caution
+</Alert>
